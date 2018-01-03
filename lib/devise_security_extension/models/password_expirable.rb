@@ -44,16 +44,16 @@ module Devise
         self.class.expire_password_after
       end
 
+      def expire_password_after_numeric?
+        return @_numeric if defined?(@_numeric)
+        @_numeric ||= self.expire_password_after.is_a?(1.class) || self.expire_password_after.is_a?(Float)
+      end
+
       private
 
         # is password changed then update password_cahanged_at
         def update_password_changed
           self.password_changed_at = Time.now if (self.new_record? or self.encrypted_password_changed?) and not self.password_changed_at_changed?
-        end
-
-        def expired_password_after_numeric?
-          return @_numeric if defined?(@_numeric)
-          @_numeric ||= self.expire_password_after.is_a?(1.class) || self.expire_password_after.is_a?(Float)
         end
 
       module ClassMethods
