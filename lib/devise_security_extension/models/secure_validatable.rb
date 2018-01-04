@@ -14,6 +14,8 @@ module Devise
 
       def self.included(base)
         base.extend ClassMethods
+        base.send(:include, DeviseSecurityExtension::Validators::Extensions)
+
         assert_secure_validations_api!(base)
 
         base.class_eval do
@@ -38,12 +40,14 @@ module Devise
               validates :email, :uniqueness => true, :allow_blank => true, :if => :email_changed? # check uniq for email ever
             end
 
-            validates :password, :presence => true, :length => password_length, :confirmation => true, :if => :password_required?
+            validates :password, :presence => true, :confirmation => true, :if => :password_required?
+            define_password_length_validator
           end
 
           # extra validations
           validates :email,    :email  => email_validation if email_validation # use rails_email_validator or similar
-          validates :password, :format => { :with => password_regex, :message => :password_format }, :if => :password_required?
+          
+          define_password_format_validator
 
           # don't allow use same password
           validate :current_equal_password_validation
@@ -78,7 +82,6 @@ module Devise
 
       module ClassMethods
         Devise::Models.config(self, :password_regex, :password_length, :email_validation)
-
       private
         def has_uniqueness_validation_of_login?
           validators.any? do |validator|
