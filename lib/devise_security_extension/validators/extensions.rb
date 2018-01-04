@@ -20,16 +20,16 @@ module DeviseSecurityExtension
       def password_length_valid
         length_range = @@_password_length_function.call
         if password && password.length > length_range.max
-          errors.add(:password, "Password is too long (maximum is #{length_range.max} characters)")
+          errors.add(:password, "is too long (maximum is #{length_range.max} characters)")
         elsif password && password.length < length_range.min
-          errors.add(:password, "Password is too short (minimum is #{length_range.min} characters)")
+          errors.add(:password, "is too short (minimum is #{length_range.min} characters)")
         end
       end
       
       def password_format_valid
         regex = @@_password_format_function.call
         unless password && password.match(regex)
-          errors.add(:password, "Password does not match the required format")
+          errors.add(:password, "does not match the required format")
         end
       end
       
