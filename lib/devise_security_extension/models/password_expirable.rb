@@ -41,7 +41,8 @@ module Devise
       end
       
       def expire_password_after
-        self.class.expire_password_after
+        value = self.class.expire_password_after
+        value.is_a?(Proc) ? value.call : value
       end
 
       private
