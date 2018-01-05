@@ -4,14 +4,16 @@ module DeviseSecurityExtension
       include DeviseSecurityExtension::Controllers::Helpers
     end
     
-    if Rails.version > "5"
-      ActiveSupport::Reloader.to_prepare do
-        DeviseSecurityExtension::Patches.apply
-      end
+    if defined?(ActiveSupport::Reloader)
+      ActiveSupport::Reloader
     else
-      ActionDispatch::Callbacks.to_prepare do
-        DeviseSecurityExtension::Patches.apply
-      end
+      ActionDispatch::Reloader
+    end.to_prepare do
+      DeviseSecurityExtension::Patches.apply
     end
+ 
+    # rails_reloader_klass.to_prepare do
+    #   DeviseSecurityExtension::Patches.apply
+    # end
   end
 end
