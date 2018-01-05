@@ -13,6 +13,7 @@ module DeviseSecurityExtension
         
         def define_password_format_validator
           @@_password_format_function = password_regex
+          @@_password_regex_error_message_function = password_regex_error_message
           validate :password_format_valid
         end
       end
@@ -28,8 +29,9 @@ module DeviseSecurityExtension
       
       def password_format_valid
         regex = @@_password_format_function.call
-        unless password && password.match(regex)
-          errors.add(:password, "does not match the required format")
+        regex_error_message = @@_password_regex_error_message_function.call
+        if password && !password.match(regex)
+          errors.add(:password, regex_error_message)
         end
       end
       

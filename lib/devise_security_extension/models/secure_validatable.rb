@@ -45,7 +45,7 @@ module Devise
           end
 
           # extra validations
-          validates :email,    :email  => email_validation if email_validation # use rails_email_validator or similar
+          # validates :email,    :email  => email_validation if email_validation # use rails_email_validator or similar
           
           define_password_format_validator
 
@@ -81,7 +81,7 @@ module Devise
       end
 
       module ClassMethods
-        Devise::Models.config(self, :password_regex, :password_length, :email_validation)
+        Devise::Models.config(self, :password_regex, :password_regex_error_message, :password_length, :email_validation)
       private
         def has_uniqueness_validation_of_login?
           validators.any? do |validator|
